@@ -5,7 +5,7 @@ public class maze {
     private int height;
     private int[][][] states;
     private int[] location;
-    private ArrayList<int[]> previousmoves;
+    private ArrayList<Integer> previousmoves;
 
     public maze(int width, int height) {
         this.width = width;
@@ -61,9 +61,17 @@ public class maze {
         } if (location[1]+1 < height && states[location[0]][location[1]+1][0] == 0) {
             validlocations.add(3);
         }
+        if (validlocations.size() == 0) {
+            tracesteps();
+        } else {
+            int randomindex = (int) (Math.random() * validlocations.size());
+            int direction = validlocations.get(randomindex);
+            domove(direction);
+        }
     }
 
     public void domove(int direction) {
+        previousmoves.add(direction);
         if (direction == 0) {
             // move left
             states[location[0]][location[1]][2] = 1; // remove left wall
@@ -73,15 +81,37 @@ public class maze {
             states[location[0]+1][location[1]][2] = 1; // remove left wall of right cell
             location[0] += 1;
         } else if (direction == 2) {
-            // move down
+            // move up
             states[location[0]][location[1]][1] = 1; // remove top wall
             location[1] -= 1;
         } else if (direction == 3) {
-            // move up
+            // move down
             states[location[0]][location[1]+1][1] = 1; // remove top wall of upper cell
             location[1] += 1;
         }
         states[location[0]][location[1]][0] = 1; // mark new cell as visited
+        generatemaze();
+    }
+
+    public void tracesteps() {
+        if (previousmoves.size() == 0) {
+            return;
+        }
+        int lastmove = previousmoves.remove(previousmoves.size() - 1);
+        if (lastmove == 0) {
+            // move right
+            location[0] += 1;
+        } else if (lastmove == 1) {
+            // move left
+            location[0] -= 1;
+        } else if (lastmove == 2) {
+            // move down
+            location[1] += 1;
+        } else if (lastmove == 3) {
+            // move up
+            location[1] -= 1;
+        }
+        generatemaze();
     }
 
     public void printmaze() {
@@ -107,7 +137,7 @@ public class maze {
                 } else if (states[j][i][2] == 0) {
                     System.out.print("| ");
                 } else {
-                    System.out.print(" ");
+                    System.out.print("  ");
                 }
                 System.out.print("n ");
             }
