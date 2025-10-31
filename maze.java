@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class maze {
     private int width;
@@ -115,8 +116,10 @@ public class maze {
     }
 
     public void printmaze() {
+        int b = 0;
         for (int i = 0; i < height; i++) {
             // print top walls
+            System.out.print("-");
             for (int j = 0; j < width; j++) {
                 if (states[j][i][1] == -1) {
                     System.out.print("---");
@@ -127,28 +130,60 @@ public class maze {
                 }
                 System.out.print("-");
             }
-            System.out.print("-");
             System.out.println();
 
             // print left walls and cells
             for (int j = 0; j < width; j++) {
                 if (states[j][i][2] == -1) {
-                    System.out.print("| ");
+                    if (b == 0) {
+                        System.out.print("  ");
+                        b = 1;
+                    } else {
+                        System.out.print("| ");
+                    }
                 } else if (states[j][i][2] == 0) {
                     System.out.print("| ");
                 } else {
                     System.out.print("  ");
                 }
-                System.out.print("n ");
+                if (j == location[0] && i == location[1]) {
+                    System.out.print("X ");
+                } else {
+                System.out.print("  ");
+                }
             }
             System.out.print("|");
             System.out.println();
         }
-        for (int j = 0; j < width; j++) {
+        for (int j = 0; j < width-1; j++) {
             System.out.print("--");
             System.out.print("--");
         }
-        System.out.print("-");
+        System.out.print("|   |");
         System.out.println();
+    }
+    public void play(Scanner scanner) {
+        while (true) {
+            printmaze();
+            System.out.println("Enter move (WASD):");
+            String move = scanner.nextLine().toUpperCase();
+            if (move.equals("A")) {
+                if (location[0]-1 >= 0 && states[location[0]][location[1]][2] == 1) {
+                    location[0] -= 1;
+                }
+            } else if (move.equals("D")) {
+                if (location[0]+1 < width && states[location[0]+1][location[1]][2] == 1) {
+                    location[0] += 1;
+                }
+            } else if (move.equals("W")) {
+                if (location[1]-1 >= 0 && states[location[0]][location[1]][1] == 1) {
+                    location[1] -= 1;
+                }
+            } else if (move.equals("S")) {
+                if (location[1]+1 < height && states[location[0]][location[1]+1][1] == 1) {
+                    location[1] += 1;
+                }
+            }
+        }
     }
 }

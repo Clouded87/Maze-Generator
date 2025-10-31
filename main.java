@@ -7,7 +7,7 @@ class Main {
         System.out.println("Enter maze height:");
         maze myMaze = new maze(x, scanner.nextInt());
         myMaze.generatemaze();
-        scanner.close();
         myMaze.printmaze();
+        scanner.close();
     }
 }
